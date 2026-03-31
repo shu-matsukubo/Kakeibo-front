@@ -5,8 +5,11 @@ type Item = {
   id: string;
   name: string;
 };
+type Props = {
+  onBack: () => void;
+};
 
-export const MasterPage = () => {
+export const MasterPage = ({ onBack }: Props) => {
   const [type, setType] = useState<"payment" | "category">("payment");
   const [items, setItems] = useState<Item[]>([]);
   const [name, setName] = useState("");
@@ -63,6 +66,7 @@ export const MasterPage = () => {
 
       {/* 追加 */}
       <input value={name} onChange={(e) => setName(e.target.value)} />
+      <button onClick={onBack}>戻る</button>
       <button onClick={handleAdd}>追加</button>
     </div>
   );

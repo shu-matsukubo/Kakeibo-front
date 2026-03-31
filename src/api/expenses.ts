@@ -1,6 +1,6 @@
 import { api } from "./client";
 
-export const fetchMonthlyExpenses = async (month: string) => {
-  const res = await api.get(`/expenses/summary?month=${month}`);
+export const fetchMonthlyExpenses = async (month: string | null) => {
+  const res = await api.get(`/expenses?month=${month}`);
   return res.data.data;
 };

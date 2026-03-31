@@ -1,0 +1,37 @@
+/* 中央寄せ（左右） */
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* テキスト中央寄せ */
+.text-center {
+  text-align: center;
+}
+
+/* フォントセット */
+.font-base {
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+
+/* 縦並べ（flex column） */
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* テーブルの基本スタイル */
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background: #f5f5f5;
+}

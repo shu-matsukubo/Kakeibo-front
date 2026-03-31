@@ -1,3 +1,5 @@
+import './App.css';
+import './styles/base.css';
 import { useState } from "react";
 import { SummaryPage } from "./pages/SummaryPage";
 import { CreatePage } from "./pages/CreatePage";
@@ -10,7 +12,7 @@ function App() {
     <div>
       {page === "summary" && <SummaryPage />}
       {page === "create" && <CreatePage onBack={() => setPage("summary")} />}
-      {page === "master" && <MasterPage />}
+      {page === "master" && <MasterPage onBack={() => setPage("summary")}/>}
 
       {page === "summary" && (
         <>
