@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchMonthlyExpenses } from "../api/expenses";
 import { addMonth, formatMonth } from "../utils/dateUtil";
+import { api } from "../api/client";
 import type { Expense } from "../types/expenses";
 
 export const SummaryPage = () => {
@@ -9,6 +10,12 @@ export const SummaryPage = () => {
 
   const changeMonth = (diff: number) => {
     setCurrentMonth(addMonth(currentMonth, diff));
+  };
+
+  const fetchData = async () => {
+      const month = formatMonth(currentMonth);
+      const data = await fetchMonthlyExpenses(month);
+      setData(data);
   };
 
   useEffect(() => {
@@ -20,6 +27,11 @@ export const SummaryPage = () => {
 
     fetchData();
   }, [currentMonth]);
+
+  const handleDelete = async (id: string) => {
+    await api.delete(`/expenses/${id}`);
+    await fetchData();
+  };
 
   return (
     <div>
@@ -42,7 +54,8 @@ export const SummaryPage = () => {
               <th>支払い方法</th>
               <th>カテゴリ</th>
               <th>金額</th>
-              <th>日付</th>
+              <th>利用日</th>
+              <th>削除</th>
             </tr>
           </thead>
 
@@ -53,6 +66,7 @@ export const SummaryPage = () => {
                 <td>{item.category_name}</td>
                 <td>{item.amount}</td>
                 <td>{item.date}</td>
+                <td><button onClick={() => handleDelete(item.id)}>削除</button></td>
               </tr>
             ))}
           </tbody>
