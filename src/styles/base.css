@@ -11,7 +11,7 @@
 
 /* フォントセット */
 .font-base {
-  font-family: "Helvetica", "Arial", sans-serif;
+  font-family: 'Helvetica', 'Arial', sans-serif;
 }
 
 /* 縦並べ（flex column） */

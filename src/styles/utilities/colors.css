@@ -1,0 +1,47 @@
+/* 基本色 */
+.bg-black {
+  background-color: #000;
+}
+.bg-white {
+  background-color: #fff;
+}
+.bg-gray {
+  background-color: #7f8c8d;
+}
+
+/* アクセント色 */
+.bg-red {
+  background-color: #e74c3c;
+}
+.bg-blue {
+  background-color: #3498db;
+}
+.bg-green {
+  background-color: #2ecc71;
+}
+.bg-purple {
+  background-color: #9b59b6;
+}
+
+/* 文字色 */
+.text-black {
+  color: #000;
+}
+.text-white {
+  color: #fff;
+}
+.text-gray {
+  color: #7f8c8d;
+}
+.text-red {
+  color: #e74c3c;
+}
+.text-blue {
+  color: #3498db;
+}
+.text-green {
+  color: #2ecc71;
+}
+.text-purple {
+  color: #9b59b6;
+}

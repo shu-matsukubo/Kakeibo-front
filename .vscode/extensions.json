@@ -1,0 +1,25 @@
+{
+  "recommendations": [
+    // ===== リンターとフォーマッター =====
+    "dbaeumer.vscode-eslint", // ESLint - コード品質とスタイルをチェック
+    "esbenp.prettier-vscode", // Prettier - コードフォーマッター
+ 
+    // ===== 言語サポート =====
+    "ms-vscode.vscode-typescript-next", // TypeScript Nightly - 最新のTypeScript機能
+ 
+    // ===== コーディング支援 =====
+    "formulahendry.auto-rename-tag", // Auto Rename Tag - HTMLタグの名前を自動で変更
+    "streetsidesoftware.code-spell-checker", // Code Spell Checker - スペルチェック
+    "usernamehw.errorlens", // Error Lens - エラーや警告をインラインで表示
+    "naumovs.color-highlight", // Color Highlight - カラーコードをハイライト
+    "christian-kohler.path-intellisense", // Path Intellisense - ファイルパスの入力補完
+ 
+    // ===== フレームワークサポート =====
+    "dsznajder.es7-react-js-snippets", // React スニペット
+    "bradlc.vscode-tailwindcss", // Tailwind CSS IntelliSense
+ 
+    // ===== その他のツール =====
+    "mikestead.dotenv", // DotENV - .envファイルのサポート
+    "eamodio.gitlens" // GitLens - Gitの拡張機能
+  ]
+}

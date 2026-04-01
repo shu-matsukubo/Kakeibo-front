@@ -2,6 +2,47 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## コーディング規約と自動フォーマッター
+
+このプロジェクトには、コードの品質と一貫性を確保するために以下の設定が含まれています：
+
+- **ESLint**: TypeScriptとReactのコードを静的解析します
+- **Prettier**: コードを自動的にフォーマットします
+- **VSCode設定**: エディタの設定と推奨拡張機能
+
+### 使用方法
+
+#### コマンド
+
+```bash
+# コードのチェック
+npm run lint
+
+# コードの自動修正
+npm run lint:fix
+
+# コードのフォーマット
+npm run format
+
+# チェックとフォーマットを一括実行
+npm run check
+```
+
+#### VSCode拡張機能のインストール
+
+Windows (PowerShell):
+```powershell
+./install-extensions.ps1
+```
+
+Linux/Mac:
+```bash
+chmod +x install-extensions.sh
+./install-extensions.sh
+```
+
+> **注意**: Linux/Macでは`jq`コマンドが必要です。インストールされていない場合は、`sudo apt install jq`（Ubuntu）または`brew install jq`（Mac）でインストールしてください。
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
