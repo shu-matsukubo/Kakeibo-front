@@ -40,7 +40,13 @@ export const SummaryTable = ({
               {item.date}
             </td>
             <td>
-              <button onClick={() => onDelete(item.id)}>削除</button>
+              <button
+                onClick={() => {
+                  void onDelete(item.id);
+                }}
+              >
+                削除
+              </button>
             </td>
           </tr>
         ))}

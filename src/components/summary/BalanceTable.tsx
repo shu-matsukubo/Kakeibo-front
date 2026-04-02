@@ -1,10 +1,11 @@
-import { calculateBalances } from '../../utils/expenseUtil';
-import { getPaymentMethod } from '../../utils/expenseUtil.ts';
+import { useMemo } from 'react';
+
+import { calculateBalances, getPaymentMethod } from '../../utils/expenseUtil';
 
 import type { Expense } from '../../types/expenses';
 
 export const BalanceTable = ({ data }: { data: Expense[] }) => {
-  const balances = calculateBalances(data);
+  const balances = useMemo(() => calculateBalances(data ?? []), [data]);
 
   return (
     <table className="table text-center">

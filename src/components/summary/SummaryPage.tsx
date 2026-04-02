@@ -1,22 +1,11 @@
-import { useState } from 'react';
-import { api } from '../../api/client';
-import { useMonthlyExpenses } from '../../hooks/useMonthlyExpenses';
-import { addMonth } from '../../utils/dateUtil';
 import { BalanceTable } from './BalanceTable';
 import { SummaryTable } from './SummaryTable';
+import { useSummary } from '../../hooks/summary/useSummary';
 
 export const SummaryPage = () => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const { data, setData } = useMonthlyExpenses(currentMonth);
+  const { currentMonth, changeMonth, data, isLoading, handleDelete } = useSummary();
 
-  const changeMonth = (diff: number) => {
-    setCurrentMonth(addMonth(currentMonth, diff));
-  };
-
-  const handleDelete = async (id: string) => {
-    await api.delete(`/expenses/${id}`);
-    setData(prev => prev.filter(item => item.id !== id));
-  };
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <div>
@@ -25,13 +14,8 @@ export const SummaryPage = () => {
       <button onClick={() => changeMonth(-1)}>←</button>
       <button onClick={() => changeMonth(1)}>→</button>
 
-      <div className="center font-base">
-        <BalanceTable data={data} />
-      </div>
-
-      <div className="center font-base">
-        <SummaryTable data={data} onDelete={handleDelete} />
-      </div>
+      <BalanceTable data={data} />
+      <SummaryTable data={data} onDelete={handleDelete} />
     </div>
   );
 };

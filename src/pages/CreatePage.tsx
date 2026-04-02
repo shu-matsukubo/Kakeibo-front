@@ -1,36 +1,19 @@
-import { useEffect, useState } from 'react';
-import { api } from '../api/client';
-import type { Category, PaymentMethod } from '../types/master';
+import { useState } from 'react';
 
-type Props = {
-  onBack: () => void;
-};
+import { useExpenseApi } from '../hooks/api/useCreateApi';
 
-export const CreatePage = ({ onBack }: Props) => {
-  const [amount, setAmount] = useState<string>('');
-  const [pointAmount, setPointAmount] = useState<string>('');
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+export const CreatePage = ({ onBack }) => {
+  const { paymentMethodsQuery, categoriesQuery, createExpense } = useExpenseApi();
 
-  const [paymentMethodId, setPaymentMethodId] = useState<string>('');
-  const [categoryId, setCategoryId] = useState<string>('');
-  const [memo, setMemo] = useState<string>('');
-  const [date, setDate] = useState<string>('');
-
-  useEffect(() => {
-    const fetchMaster = async () => {
-      const pmRes = await api.get('/payment-methods');
-      const catRes = await api.get('/categories');
-
-      setPaymentMethods(pmRes.data.data);
-      setCategories(catRes.data.data);
-    };
-
-    fetchMaster();
-  }, []);
+  const [amount, setAmount] = useState('');
+  const [pointAmount, setPointAmount] = useState('');
+  const [paymentMethodId, setPaymentMethodId] = useState('');
+  const [categoryId, setCategoryId] = useState('');
+  const [memo, setMemo] = useState('');
+  const [date, setDate] = useState('');
 
   const handleSubmit = async () => {
-    await api.post('/expenses', {
+    await createExpense({
       amount: Number(amount),
       point_amount: Number(pointAmount),
       payment_method_id: paymentMethodId,
@@ -42,10 +25,13 @@ export const CreatePage = ({ onBack }: Props) => {
     onBack();
   };
 
+  if (paymentMethodsQuery.isLoading || categoriesQuery.isLoading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <div>
       <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="金額" />
-
       <input
         value={pointAmount}
         onChange={e => setPointAmount(e.target.value)}
@@ -54,7 +40,7 @@ export const CreatePage = ({ onBack }: Props) => {
 
       <select onChange={e => setPaymentMethodId(e.target.value)}>
         <option value="">選択してください</option>
-        {paymentMethods.map(pm => (
+        {paymentMethodsQuery.data.map(pm => (
           <option key={pm.id} value={pm.id}>
             {pm.name}
           </option>
@@ -63,7 +49,7 @@ export const CreatePage = ({ onBack }: Props) => {
 
       <select onChange={e => setCategoryId(e.target.value)}>
         <option value="">選択してください</option>
-        {categories.map(c => (
+        {categoriesQuery.data.map(c => (
           <option key={c.id} value={c.id}>
             {c.name}
           </option>
@@ -71,7 +57,6 @@ export const CreatePage = ({ onBack }: Props) => {
       </select>
 
       <input value={memo} onChange={e => setMemo(e.target.value)} placeholder="メモ" />
-
       <input type="date" value={date} onChange={e => setDate(e.target.value)} />
 
       <button onClick={onBack}>戻る</button>
