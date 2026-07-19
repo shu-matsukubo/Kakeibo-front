@@ -5,7 +5,7 @@ import { notifyAuthExpired, refreshSession } from '@/auth/session';
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BFF_BASE_URL
     ? `${import.meta.env.VITE_BFF_BASE_URL}/api`
-    : 'http://localhost:18083/api',
+    : 'http://localhost:18082/api',
   withCredentials: true,
 });
 

@@ -57,25 +57,20 @@ On Windows PowerShell, use `npm.cmd run ...` if `npm.ps1` is blocked by executio
 
 ## Docker
 
-Start a production-like static container:
+Start the Vite development server in Docker with hot reload:
 
 ```bash
-docker compose up -d --build
+docker compose up
 ```
 
-The app is served through Nginx at:
+The app is available at:
 
 ```text
 http://localhost:5173
 ```
 
-Start the Vite dev server in Docker with hot reload:
-
-```bash
-docker compose --profile dev up front-dev
-```
-
-The Docker build uses `VITE_BFF_BASE_URL=http://localhost:18082` by default so the browser calls the local BFF.
+The Docker environment is intended for local development only. It uses
+`VITE_BFF_BASE_URL=http://localhost:18082` so the browser calls the local BFF.
 
 ## Main Directories
 

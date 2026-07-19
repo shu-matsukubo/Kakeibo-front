@@ -2,26 +2,13 @@ services:
   front:
     build:
       context: .
-      target: production
-      args:
-        VITE_BFF_BASE_URL: http://localhost:18082
     container_name: matsu-front
     ports:
-      - 5173:80
-
-  front-dev:
-    profiles:
-      - dev
-    build:
-      context: .
-      target: development
-    container_name: matsu-front-dev
-    ports:
-      - 5174:5173
+      - 5173:5173
     volumes:
       - ./src:/app/src
       - ./public:/app/public
       - ./index.html:/app/index.html
       - ./vite.config.ts:/app/vite.config.ts
     environment:
-      - VITE_BFF_BASE_URL=http://localhost:18083
+      - VITE_BFF_BASE_URL=http://localhost:18082
