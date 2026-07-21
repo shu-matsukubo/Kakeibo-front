@@ -3,7 +3,7 @@ import { Plus } from 'lucide-react';
 
 import { Button } from '@/components/common/Button';
 import type { CreateFormValues } from '@/hooks/expenses/create/useCreate';
-import type { ExpenseCategory, ExpensePaymentMethod } from '@/schemas/expenses/master';
+import type { ExpenseCategory, ExpensePaymentMethod } from '@/types/expenses/api';
 import { MasterSelect } from './MasterSelect';
 
 type Props = {
@@ -27,7 +27,11 @@ export const CreateForm = ({
 }: Props) => {
   return (
     <form onSubmit={onSubmit}>
-      <input value={form.amount} onChange={event => onChange('amount', event.target.value)} placeholder="金額" />
+      <input
+        value={form.amount}
+        onChange={event => onChange('amount', event.target.value)}
+        placeholder="金額"
+      />
       <input
         value={form.pointAmount}
         onChange={event => onChange('pointAmount', event.target.value)}
@@ -48,8 +52,16 @@ export const CreateForm = ({
         onChange={value => onChange('categoryId', value)}
       />
 
-      <input value={form.memo} onChange={event => onChange('memo', event.target.value)} placeholder="メモ" />
-      <input type="date" value={form.date} onChange={event => onChange('date', event.target.value)} />
+      <input
+        value={form.memo}
+        onChange={event => onChange('memo', event.target.value)}
+        placeholder="メモ"
+      />
+      <input
+        type="date"
+        value={form.date}
+        onChange={event => onChange('date', event.target.value)}
+      />
 
       <Button type="button" variant="secondary" onClick={onBack}>
         戻る

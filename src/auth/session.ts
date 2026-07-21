@@ -1,40 +1,28 @@
-import axios from 'axios';
+import { api, requireData } from '@/api/client';
+export { notifyAuthExpired } from '@/auth/events';
 
-const bffBaseUrl =
-  import.meta.env.VITE_BFF_BASE_URL ?? 'http://localhost:18082';
-
-const authApi = axios.create({
-  baseURL: bffBaseUrl,
-  withCredentials: true,
-});
-
-export const login = async (email: string, password: string) => {
-  await authApi.post('/auth/login', {
-    email,
-    password,
-  });
+export const login = async (email: string, password: string): Promise<void> => {
+  requireData(
+    await api.POST('/auth/login', {
+      body: { email, password },
+    })
+  );
 };
 
-export const register = async (email: string, password: string) => {
-  await authApi.post('/auth/register', {
-    email,
-    password,
-  });
+export const register = async (email: string, password: string): Promise<void> => {
+  requireData(
+    await api.POST('/auth/register', {
+      body: { email, password },
+    })
+  );
 };
 
-export const refreshSession = async () => {
-  await authApi.post('/auth/refresh');
+export const refreshSession = async (): Promise<void> => {
+  requireData(await api.POST('/auth/refresh'));
 };
 
-export const logout = async () => {
-  await authApi.post('/auth/logout');
+export const logout = async (): Promise<void> => {
+  requireData(await api.POST('/auth/logout'));
 };
 
-export const getSession = async () => {
-  const res = await authApi.get<{ authenticated: boolean }>('/auth/session');
-  return res.data;
-};
-
-export const notifyAuthExpired = () => {
-  window.dispatchEvent(new Event('matsu:auth-expired'));
-};
+export const getSession = async () => requireData(await api.GET('/auth/session'));

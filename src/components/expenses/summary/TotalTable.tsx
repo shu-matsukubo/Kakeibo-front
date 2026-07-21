@@ -1,4 +1,4 @@
-import type { ExpenseSummaryMeta } from '@/schemas/expenses/summary';
+import type { ExpenseSummaryMeta } from '@/types/expenses/api';
 
 type Props = {
   data: ExpenseSummaryMeta;

@@ -1,6 +1,9 @@
-import { api } from '@/api/client';
+import { api, requireData } from '@/api/client';
 import type { ExpensesCreate } from '@/types/expenses/create';
 
-export const fetchExpenseCreate = async (payload: ExpensesCreate) => {
-  await api.post('/expenses', payload);
-};
+export const fetchExpenseCreate = async (payload: ExpensesCreate) =>
+  requireData(
+    await api.POST('/api/expenses', {
+      body: payload,
+    })
+  );

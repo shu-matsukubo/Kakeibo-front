@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { fetchExpenseCreate } from '@/api/expenses/create';
 import { fetchExpenseCategory, fetchExpensePaymentMethod } from '@/api/expenses/master';
-import type { ExpenseCategory, ExpensePaymentMethod } from '@/schemas/expenses/master';
+import type { ExpenseCategory, ExpensePaymentMethod } from '@/types/expenses/api';
 import type { ExpensesCreate } from '@/types/expenses/create';
 
 const defaultPaymentMethods: ExpensePaymentMethod[] = [];

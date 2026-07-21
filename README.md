@@ -10,8 +10,8 @@ The frontend talks to `matsu-bff` instead of calling the Laravel API or auth ser
 - TypeScript
 - Vite
 - TanStack Query
-- Axios
-- Zod
+- openapi-fetch
+- OpenAPI-generated TypeScript types
 - lucide-react
 
 ## Local Development
@@ -37,7 +37,23 @@ http://localhost:18082
 
 Set `VITE_BFF_BASE_URL` if a different BFF origin is needed.
 
-API requests use the BFF `/api/*` proxy. The frontend must not store access or refresh tokens in localStorage.
+API requests use the typed BFF contract. The frontend must not store access or refresh tokens in localStorage.
+
+## BFF Contract Workflow
+
+The generated BFF OpenAPI artifact is the source of frontend API types. After changing a BFF
+route or schema, regenerate both artifacts:
+
+```bash
+cd ../matsu-bff
+npm run openapi:generate
+
+cd ../matsu-front
+npm run openapi:generate
+```
+
+`openapi-fetch` uses the generated `paths` type, so URLs, query parameters, request bodies,
+success responses, and error responses are checked without handwritten API response types.
 
 ## Scripts
 
@@ -51,6 +67,8 @@ API requests use the BFF `/api/*` proxy. The frontend must not store access or r
 | `npm run format:check` | Check Prettier formatting. |
 | `npm run typecheck` | Run TypeScript without emitting files. |
 | `npm run check` | Run lint and formatting checks. |
+| `npm run openapi:generate` | Generate frontend types from the BFF OpenAPI artifact. |
+| `npm run openapi:check` | Verify that generated frontend API types are current. |
 | `npm run preview` | Preview the production build locally. |
 
 On Windows PowerShell, use `npm.cmd run ...` if `npm.ps1` is blocked by execution policy.
@@ -74,12 +92,12 @@ The Docker environment is intended for local development only. It uses
 
 ## Main Directories
 
-- `src/api`: Axios client and API request modules.
+- `src/api`: OpenAPI-typed client and API request modules.
+- `src/api/generated/schema.d.ts`: Generated BFF request and response types.
 - `src/auth`: Session helpers for BFF-backed authentication.
 - `src/components`: Reusable UI components.
 - `src/hooks`: React hooks.
 - `src/pages`: Page-level components.
-- `src/schemas`: Zod schemas.
 - `src/styles`: CSS, tokens, and utilities.
 - `src/types`: Shared TypeScript types.
 - `src/utils`: Utility functions.

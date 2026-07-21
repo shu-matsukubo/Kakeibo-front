@@ -15,7 +15,13 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   // ビルド成果物やnode_modulesなどをチェック対象から除外
-  globalIgnores(['dist', 'node_modules', 'eslint.config.js', '.prettierrc.js']),
+  globalIgnores([
+    'dist',
+    'node_modules',
+    'eslint.config.js',
+    '.prettierrc.js',
+    'src/api/generated/**',
+  ]),
 
   // ===== 共通ルール（すべてのファイル） =====
   {

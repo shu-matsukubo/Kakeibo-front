@@ -10,6 +10,7 @@ import { Button } from './components/common/Button';
 import { getSession, logout } from './auth/session';
 import { LoginPage } from './pages/auth/LoginPage';
 import { LogOut } from 'lucide-react';
+import { AUTH_EXPIRED_EVENT } from './auth/events';
 
 function App() {
   const [page, setPage] = useState<'summary' | 'create'>('summary');
@@ -22,10 +23,10 @@ function App() {
       setPage('summary');
     };
 
-    window.addEventListener('kakeibo:auth-expired', handleExpired);
+    window.addEventListener(AUTH_EXPIRED_EVENT, handleExpired);
 
     getSession()
-      .then((session) => {
+      .then(session => {
         setAuthenticated(session.authenticated);
       })
       .catch(() => {
@@ -36,7 +37,7 @@ function App() {
       });
 
     return () => {
-      window.removeEventListener('kakeibo:auth-expired', handleExpired);
+      window.removeEventListener(AUTH_EXPIRED_EVENT, handleExpired);
     };
   }, []);
 

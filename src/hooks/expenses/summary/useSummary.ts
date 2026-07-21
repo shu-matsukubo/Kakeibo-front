@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useExpenseHistoryApi, useSummaryApi } from '@/hooks/expenses/api/useSummaryApi';
-import type { ExpenseSummary } from '@/schemas/expenses/summary';
+import type { ExpenseSummary } from '@/types/expenses/api';
 import { formatDate } from '@/utils/date/format';
 
 type DateRange = {

@@ -1,13 +1,10 @@
-import { api } from '@/api/client';
-import {
-  ExpenseHistoryResponseSchema,
-  ExpenseSummaryResponseSchema,
-} from '@/schemas/expenses/summary';
+import { api, requireData } from '@/api/client';
+import type { ExpenseGroupBy } from '@/types/expenses/api';
 
 export type ExpenseSummaryParams = {
   startDate: string;
   endDate: string;
-  groupBy?: string;
+  groupBy?: ExpenseGroupBy;
 };
 
 export type ExpenseHistoryParams = {
@@ -20,32 +17,32 @@ export const fetchExpenseSummary = async ({
   startDate,
   endDate,
   groupBy = 'category',
-}: ExpenseSummaryParams) => {
-  const res = await api.get('/expenses', {
-    params: {
-      mode: 'summary',
-      start_date: startDate,
-      end_date: endDate,
-      group_by: groupBy,
-    },
-  });
-
-  return ExpenseSummaryResponseSchema.parse(res.data);
-};
+}: ExpenseSummaryParams) =>
+  requireData(
+    await api.GET('/api/expenses/summary', {
+      params: {
+        query: {
+          start_date: startDate,
+          end_date: endDate,
+          group_by: groupBy,
+        },
+      },
+    })
+  );
 
 export const fetchExpenseHistory = async ({
   startDate,
   endDate,
   categoryId,
-}: ExpenseHistoryParams) => {
-  const res = await api.get('/expenses', {
-    params: {
-      mode: 'history',
-      start_date: startDate,
-      end_date: endDate,
-      category_id: categoryId,
-    },
-  });
-
-  return ExpenseHistoryResponseSchema.parse(res.data);
-};
+}: ExpenseHistoryParams) =>
+  requireData(
+    await api.GET('/api/expenses/history', {
+      params: {
+        query: {
+          start_date: startDate,
+          end_date: endDate,
+          category_id: categoryId,
+        },
+      },
+    })
+  );

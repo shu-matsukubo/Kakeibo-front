@@ -1,30 +1,42 @@
-import axios from 'axios';
-import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { notifyAuthExpired, refreshSession } from '@/auth/session';
+import createClient from 'openapi-fetch';
+import type { Middleware } from 'openapi-fetch';
+import { notifyAuthExpired } from '@/auth/events';
+import type { paths } from '@/api/generated/schema';
 
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_BFF_BASE_URL
-    ? `${import.meta.env.VITE_BFF_BASE_URL}/api`
-    : 'http://localhost:18082/api',
-  withCredentials: true,
-});
-
-type RetriableRequestConfig = InternalAxiosRequestConfig & {
-  _retry?: boolean;
-};
-
+const bffBaseUrl = import.meta.env.VITE_BFF_BASE_URL ?? 'http://localhost:18082';
+const retryableRequests = new WeakMap<Request, Request>();
 let refreshPromise: Promise<void> | null = null;
 
-api.interceptors.response.use(
-  response => response,
-  async (error: AxiosError) => {
-    const originalRequest = error.config as RetriableRequestConfig | undefined;
+const refreshSession = async (): Promise<void> => {
+  const response = await fetch(`${bffBaseUrl}/auth/refresh`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      accept: 'application/json',
+    },
+  });
 
-    if (error.response?.status !== 401 || !originalRequest || originalRequest._retry) {
-      return Promise.reject(error);
+  if (!response.ok) {
+    throw new Error('Session refresh failed.');
+  }
+};
+
+const sessionRetryMiddleware: Middleware = {
+  onRequest({ request, schemaPath }) {
+    if (schemaPath.startsWith('/api/')) {
+      retryableRequests.set(request, request.clone());
+    }
+  },
+  async onResponse({ request, response, schemaPath }) {
+    if (!schemaPath.startsWith('/api/') || response.status !== 401) {
+      return;
     }
 
-    originalRequest._retry = true;
+    const retryRequest = retryableRequests.get(request);
+
+    if (!retryRequest) {
+      return;
+    }
 
     try {
       refreshPromise ??= refreshSession().finally(() => {
@@ -32,10 +44,64 @@ api.interceptors.response.use(
       });
 
       await refreshPromise;
-      return api(originalRequest);
-    } catch (refreshError) {
+      return fetch(retryRequest);
+    } catch {
       notifyAuthExpired();
-      return Promise.reject(refreshError);
+      return response;
+    }
+  },
+};
+
+export const api = createClient<paths>({
+  baseUrl: bffBaseUrl,
+  credentials: 'include',
+});
+
+api.use(sessionRetryMiddleware);
+
+type ApiResult<T> =
+  | {
+      data: T;
+      error?: never;
+      response: Response;
+    }
+  | {
+      data?: never;
+      error: unknown;
+      response: Response;
+    };
+
+const errorMessage = (error: unknown, response: Response): string => {
+  if (error && typeof error === 'object' && 'message' in error) {
+    const message = (error as { message?: unknown }).message;
+
+    if (typeof message === 'string') {
+      return message;
     }
   }
-);
+
+  return `BFF request failed: ${response.status} ${response.statusText}`;
+};
+
+export class BffApiError extends Error {
+  readonly status: number;
+  readonly details: unknown;
+
+  constructor(response: Response, details: unknown) {
+    super(errorMessage(details, response));
+    this.status = response.status;
+    this.details = details;
+  }
+}
+
+export const requireData = <T>(result: ApiResult<T>): NonNullable<T> => {
+  if ('error' in result) {
+    throw new BffApiError(result.response, result.error);
+  }
+
+  if (result.data == null) {
+    throw new BffApiError(result.response, { message: 'BFF returned an empty response.' });
+  }
+
+  return result.data as NonNullable<T>;
+};

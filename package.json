@@ -12,15 +12,16 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
     "typecheck": "tsc --noEmit",
     "check": "npm run lint && npm run format:check",
+    "openapi:generate": "openapi-typescript ../matsu-bff/openapi/openapi.json -o src/api/generated/schema.d.ts --export-type && prettier --write src/api/generated/schema.d.ts",
+    "openapi:check": "npm run openapi:generate && git diff --exit-code -- src/api/generated/schema.d.ts",
     "preview": "vite preview"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.96.1",
-    "axios": "^1.14.0",
     "lucide-react": "^1.8.0",
+    "openapi-fetch": "^0.17.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "zod": "^4.3.6"
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -34,6 +35,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "openapi-typescript": "^7.13.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",

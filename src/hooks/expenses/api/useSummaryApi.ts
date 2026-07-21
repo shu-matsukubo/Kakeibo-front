@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { fetchExpenseHistory, fetchExpenseSummary } from '@/api/expenses/summary';
-import type { ExpenseHistoryResponse } from '@/schemas/expenses/summary';
+import type { ExpenseGroupBy, ExpenseHistoryResponse } from '@/types/expenses/api';
 
 const defaultResponse = {
   data: [],
@@ -14,7 +14,7 @@ const defaultResponse = {
 
 const defaultHistoryResponse: ExpenseHistoryResponse = [];
 
-export const useSummaryApi = (startDate: string, endDate: string, groupBy: string) => {
+export const useSummaryApi = (startDate: string, endDate: string, groupBy: ExpenseGroupBy) => {
   const query = useQuery({
     queryKey: ['expenseSummary', startDate, endDate, groupBy],
     queryFn: () => fetchExpenseSummary({ startDate, endDate, groupBy }),
@@ -26,11 +26,7 @@ export const useSummaryApi = (startDate: string, endDate: string, groupBy: strin
   };
 };
 
-export const useExpenseHistoryApi = (
-  startDate: string,
-  endDate: string,
-  categoryId?: string
-) => {
+export const useExpenseHistoryApi = (startDate: string, endDate: string, categoryId?: string) => {
   const query = useQuery({
     queryKey: ['expenseHistory', startDate, endDate, categoryId],
     queryFn: () =>

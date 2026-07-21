@@ -1,4 +1,4 @@
-import type { ExpenseHistory } from '@/schemas/expenses/summary';
+import type { ExpenseHistory } from '@/types/expenses/api';
 
 type Props = {
   categoryName: string;
@@ -25,7 +25,9 @@ export const HistoryTable = ({
         <h2 className="summary-detail__title">履歴詳細</h2>
         <div className="summary-detail__meta">
           <span>カテゴリ: {categoryName}</span>
-          <span>期間: {startDate} 〜 {endDate}</span>
+          <span>
+            期間: {startDate} 〜 {endDate}
+          </span>
           <span className="summary-detail__amount">合計金額: {formatAmount(totalAmount)}</span>
         </div>
       </div>

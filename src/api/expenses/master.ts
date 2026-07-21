@@ -1,17 +1,6 @@
-import { api } from '@/api/client';
-import {
-  ExpensePaymentMethodListSchema,
-  ExpenseCategoryListSchema,
-} from '@/schemas/expenses/master';
+import { api, requireData } from '@/api/client';
 
-export const fetchExpensePaymentMethod = async () => {
-  const res = await api.get<{ data: unknown }>('/payment-methods');
+export const fetchExpensePaymentMethod = async () =>
+  requireData(await api.GET('/api/payment-methods'));
 
-  return ExpensePaymentMethodListSchema.parse(res.data);
-};
-
-export const fetchExpenseCategory = async () => {
-  const res = await api.get<{ data: unknown }>('/categories');
-
-  return ExpenseCategoryListSchema.parse(res.data);
-};
+export const fetchExpenseCategory = async () => requireData(await api.GET('/api/categories'));
