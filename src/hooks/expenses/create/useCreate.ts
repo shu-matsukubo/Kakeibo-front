@@ -1,20 +1,21 @@
 import { useState } from 'react';
+
 import type { FormEvent } from 'react';
 
 import { useExpenseApi } from '@/hooks/expenses/api/useCreateApi';
 
-type CreateFormValues = {
+interface CreateFormValues {
   amount: string;
   pointAmount: string;
   paymentMethodId: string;
   categoryId: string;
   memo: string;
   date: string;
-};
+}
 
-type UseCreateProps = {
+interface UseCreateProps {
   onCreated: () => void;
-};
+}
 
 const initialFormValues: CreateFormValues = {
   amount: '',

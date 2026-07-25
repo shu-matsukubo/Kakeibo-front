@@ -1,8 +1,8 @@
 import type { ExpenseSummaryMeta } from '@/types/expenses/api';
 
-type Props = {
+interface Props {
   data: ExpenseSummaryMeta;
-};
+}
 
 export const TotalTable = ({ data }: Props) => {
   return (

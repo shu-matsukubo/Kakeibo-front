@@ -1,14 +1,14 @@
-type MasterItem = {
+interface MasterItem {
   id: string;
   name: string;
-};
+}
 
-type Props = {
+interface Props {
   value: string;
   items: MasterItem[];
   placeholder: string;
   onChange: (value: string) => void;
-};
+}
 
 export const MasterSelect = ({ value, items, placeholder, onChange }: Props) => {
   return (

@@ -57,19 +57,20 @@ success responses, and error responses are checked without handwritten API respo
 
 ## Scripts
 
-| Script | Description |
-| --- | --- |
-| `npm run dev` | Start the Vite dev server. |
-| `npm run build` | Run TypeScript build checks and create the production Vite build. |
-| `npm run lint` | Run ESLint with zero warnings allowed. |
-| `npm run lint:fix` | Auto-fix ESLint issues where possible. |
-| `npm run format` | Format source files with Prettier. |
-| `npm run format:check` | Check Prettier formatting. |
-| `npm run typecheck` | Run TypeScript without emitting files. |
-| `npm run check` | Run lint and formatting checks. |
-| `npm run openapi:generate` | Generate frontend types from the BFF OpenAPI artifact. |
-| `npm run openapi:check` | Verify that generated frontend API types are current. |
-| `npm run preview` | Preview the production build locally. |
+| Script                     | Description                                                       |
+| -------------------------- | ----------------------------------------------------------------- |
+| `npm run dev`              | Start the Vite dev server.                                        |
+| `npm run build`            | Run TypeScript build checks and create the production Vite build. |
+| `npm run lint`             | Run ESLint with zero warnings allowed.                            |
+| `npm run lint:fix`         | Auto-fix ESLint issues where possible.                            |
+| `npm run format`           | Format source files with Prettier.                                |
+| `npm run format:check`     | Check Prettier formatting.                                        |
+| `npm run typecheck`        | Run TypeScript without emitting files.                            |
+| `npm run check`            | Run ESLint, TypeScript, and Prettier checks.                      |
+| `npm run fix`              | Auto-fix ESLint issues and format the project.                    |
+| `npm run openapi:generate` | Generate frontend types from the BFF OpenAPI artifact.            |
+| `npm run openapi:check`    | Verify that generated frontend API types are current.             |
+| `npm run preview`          | Preview the production build locally.                             |
 
 On Windows PowerShell, use `npm.cmd run ...` if `npm.ps1` is blocked by execution policy.
 
@@ -89,6 +90,28 @@ http://localhost:5173
 
 The Docker environment is intended for local development only. It uses
 `VITE_BFF_BASE_URL=http://localhost:18082` so the browser calls the local BFF.
+
+Run all quality checks in a one-off container:
+
+```bash
+docker compose run --rm front npm run check
+```
+
+Auto-fix ESLint issues and format the project through Docker:
+
+```bash
+docker compose run --rm front npm run fix
+```
+
+## CI
+
+GitHub Actions runs on pull requests targeting `develop` or `main`. The workflow installs
+dependencies with `npm ci`, runs ESLint, TypeScript, and Prettier checks, and verifies the
+production build.
+
+```text
+.github/workflows/ci.yml
+```
 
 ## Main Directories
 

@@ -1,9 +1,10 @@
-import { useCreate } from '@/hooks/expenses/create/useCreate';
 import { CreateForm } from './CreateForm';
 
-export type Props = {
+import { useCreate } from '@/hooks/expenses/create/useCreate';
+
+export interface Props {
   onBack: () => void;
-};
+}
 
 export const CreatePage = ({ onBack }: Props) => {
   const {

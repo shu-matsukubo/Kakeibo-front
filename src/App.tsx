@@ -1,17 +1,17 @@
+import { LogOut } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import './App.css';
+import { AUTH_EXPIRED_EVENT } from './auth/events';
+import { getSession, logout } from './auth/session';
+import { Button } from './components/common/Button';
+import { IconSample } from './components/icons';
+import { LoginPage } from './pages/auth/LoginPage';
 import CreateIndex from './pages/expenses/CreateIndex';
 import SummaryIndex from './pages/expenses/SummaryIndex';
+
 import './styles/utilities/index.css';
 import './styles/index.css';
-import { IconSample } from './components/icons';
-import { Button } from './components/common/Button';
-import { getSession, logout } from './auth/session';
-import { LoginPage } from './pages/auth/LoginPage';
-import { LogOut } from 'lucide-react';
-import { AUTH_EXPIRED_EVENT } from './auth/events';
-
 function App() {
   const [page, setPage] = useState<'summary' | 'create'>('summary');
   const [authenticated, setAuthenticated] = useState(false);

@@ -1,10 +1,10 @@
 import type { ExpenseSummary } from '@/types/expenses/api';
 
-type Props = {
+interface Props {
   data: ExpenseSummary[];
   selectedCategoryId?: string;
   onRowClick?: (row: ExpenseSummary) => void;
-};
+}
 
 export const BalanceTable = ({ data, selectedCategoryId, onRowClick }: Props) => {
   return (

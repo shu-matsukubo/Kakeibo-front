@@ -1,13 +1,14 @@
 import { useState } from 'react';
 
-import { useExpenseHistoryApi, useSummaryApi } from '@/hooks/expenses/api/useSummaryApi';
 import type { ExpenseSummary } from '@/types/expenses/api';
+
+import { useExpenseHistoryApi, useSummaryApi } from '@/hooks/expenses/api/useSummaryApi';
 import { formatDate } from '@/utils/date/format';
 
-type DateRange = {
+interface DateRange {
   startDate: string;
   endDate: string;
-};
+}
 
 type SummaryGroupBy = 'category' | 'payment_method';
 

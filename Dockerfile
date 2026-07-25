@@ -6,6 +6,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY tsconfig*.json ./
+COPY eslint.config.js .prettierrc.js .prettierignore ./
 COPY vite.config.ts ./
 COPY index.html ./
 COPY public ./public

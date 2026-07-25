@@ -1,17 +1,18 @@
-import { api, requireData } from '@/api/client';
 import type { ExpenseGroupBy } from '@/types/expenses/api';
 
-export type ExpenseSummaryParams = {
+import { api, requireData } from '@/api/client';
+
+export interface ExpenseSummaryParams {
   startDate: string;
   endDate: string;
   groupBy?: ExpenseGroupBy;
-};
+}
 
-export type ExpenseHistoryParams = {
+export interface ExpenseHistoryParams {
   startDate: string;
   endDate: string;
   categoryId: string;
-};
+}
 
 export const fetchExpenseSummary = async ({
   startDate,

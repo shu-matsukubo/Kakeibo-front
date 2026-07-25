@@ -94,6 +94,7 @@ export default defineConfig([
       ecmaVersion: 2022, // 対応するECMAScriptのバージョン
       globals: globals.browser, // ブラウザ環境のグローバル変数
       parserOptions: {
+        projectService: true,
         // 型チェックを行うためのtsconfig
         tsconfigRootDir: import.meta.dirname,
       },
@@ -125,12 +126,6 @@ export default defineConfig([
       // ----- 命名規則 -----
       '@typescript-eslint/naming-convention': [
         'error',
-        // インターフェース名はIで始める（例: IUserProps）
-        {
-          selector: 'interface',
-          format: ['PascalCase'], // パスカルケース（大文字始まり）
-          prefix: ['I'], // 接頭辞「I」を付ける
-        },
         // 型名はPascalCase（例: UserType, ResponseData）
         {
           selector: 'typeLike',

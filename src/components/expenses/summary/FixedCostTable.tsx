@@ -1,8 +1,8 @@
 import type { ExpenseSummaryMeta } from '@/types/expenses/api';
 
-type Props = {
+interface Props {
   data: ExpenseSummaryMeta['fixed_costs'];
-};
+}
 
 export const FixedCostTable = ({ data }: Props) => {
   return (

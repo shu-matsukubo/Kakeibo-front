@@ -1,5 +1,9 @@
-.bg-primary-500 { background-color: var(--color-primary-500); }
-.bg-gray-100 { background-color: var(--color-gray-100); }
+.bg-primary-500 {
+  background-color: var(--color-primary-500);
+}
+.bg-gray-100 {
+  background-color: var(--color-gray-100);
+}
 
 /* hover */
 .hover\:bg-primary-700:hover {

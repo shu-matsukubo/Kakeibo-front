@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchExpenseHistory, fetchExpenseSummary } from '@/api/expenses/summary';
 import type { ExpenseGroupBy, ExpenseHistoryResponse } from '@/types/expenses/api';
+
+import { fetchExpenseHistory, fetchExpenseSummary } from '@/api/expenses/summary';
 
 const defaultResponse = {
   data: [],

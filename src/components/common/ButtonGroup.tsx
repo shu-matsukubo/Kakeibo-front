@@ -1,15 +1,15 @@
 import { Button } from './Button';
 
-type Option<T> = {
+interface Option<T> {
   label: string;
   value: T;
-};
+}
 
-type Props<T> = {
+interface Props<T> {
   options: Option<T>[];
   value: T;
   onChange: (v: T) => void;
-};
+}
 
 export const ButtonGroup = <T extends string>({ options, value, onChange }: Props<T>) => {
   return (

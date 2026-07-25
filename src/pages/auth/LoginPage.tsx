@@ -1,14 +1,15 @@
-import { useState } from 'react';
-import type { FormEvent } from 'react';
 import { LogIn, UserPlus } from 'lucide-react';
+import { useState } from 'react';
 
-import { Button } from '@/components/common/Button';
+import type { FormEvent } from 'react';
+
 import { login, register } from '@/auth/session';
+import { Button } from '@/components/common/Button';
 import './login.css';
 
-type Props = {
+interface Props {
   onAuthenticated: () => void;
-};
+}
 
 type Mode = 'login' | 'register';
 
@@ -38,7 +39,7 @@ export const LoginPage = ({ onAuthenticated }: Props) => {
       setError(
         isRegister
           ? '登録に失敗しました。メールアドレスとパスワードを確認してください。'
-          : 'ログインに失敗しました。メールアドレスとパスワードを確認してください。',
+          : 'ログインに失敗しました。メールアドレスとパスワードを確認してください。'
       );
     } finally {
       setLoading(false);
@@ -78,7 +79,7 @@ export const LoginPage = ({ onAuthenticated }: Props) => {
             <input
               type="email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={event => setEmail(event.target.value)}
               autoComplete="email"
               required
             />
@@ -89,7 +90,7 @@ export const LoginPage = ({ onAuthenticated }: Props) => {
             <input
               type="password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={event => setPassword(event.target.value)}
               autoComplete={isRegister ? 'new-password' : 'current-password'}
               minLength={8}
               required

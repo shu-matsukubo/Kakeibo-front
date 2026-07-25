@@ -1,12 +1,14 @@
-import type { FormEvent } from 'react';
 import { Plus } from 'lucide-react';
 
-import { Button } from '@/components/common/Button';
-import type { CreateFormValues } from '@/hooks/expenses/create/useCreate';
-import type { ExpenseCategory, ExpensePaymentMethod } from '@/types/expenses/api';
 import { MasterSelect } from './MasterSelect';
 
-type Props = {
+import type { CreateFormValues } from '@/hooks/expenses/create/useCreate';
+import type { ExpenseCategory, ExpensePaymentMethod } from '@/types/expenses/api';
+import type { FormEvent } from 'react';
+
+import { Button } from '@/components/common/Button';
+
+interface Props {
   form: CreateFormValues;
   paymentMethods: ExpensePaymentMethod[];
   categories: ExpenseCategory[];
@@ -14,7 +16,7 @@ type Props = {
   onBack: () => void;
   onChange: (name: keyof CreateFormValues, value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-};
+}
 
 export const CreateForm = ({
   form,

@@ -1,13 +1,13 @@
 import type { ExpenseHistory } from '@/types/expenses/api';
 
-type Props = {
+interface Props {
   categoryName: string;
   totalAmount: number;
   startDate: string;
   endDate: string;
   data: ExpenseHistory[];
   isLoading: boolean;
-};
+}
 
 const formatAmount = (amount: number) => amount.toLocaleString('ja-JP');
 

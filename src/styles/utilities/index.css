@@ -1,14 +1,13 @@
-@import "../tokens/spacing.css";
-@import "../tokens/colors.css";
+@import '../tokens/spacing.css';
+@import '../tokens/colors.css';
 
-@import "./flex.css";
-@import "./grid.css";
-@import "./position.css";
-@import "./spacing.css";
-@import "./size.css";
-@import "./overflow.css";
-@import "./display.css";
-@import "./text.css";
-@import "./border.css";
-@import "./background.css";
-
+@import './flex.css';
+@import './grid.css';
+@import './position.css';
+@import './spacing.css';
+@import './size.css';
+@import './overflow.css';
+@import './display.css';
+@import './text.css';
+@import './border.css';
+@import './background.css';

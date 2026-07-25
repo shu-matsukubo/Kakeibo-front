@@ -1,9 +1,13 @@
 import createClient from 'openapi-fetch';
-import type { Middleware } from 'openapi-fetch';
-import { notifyAuthExpired } from '@/auth/events';
-import type { paths } from '@/api/generated/schema';
 
-const bffBaseUrl = import.meta.env.VITE_BFF_BASE_URL ?? 'http://localhost:18082';
+import type { paths } from '@/api/generated/schema';
+import type { Middleware } from 'openapi-fetch';
+
+import { notifyAuthExpired } from '@/auth/events';
+
+const configuredBffBaseUrl: unknown = import.meta.env.VITE_BFF_BASE_URL;
+const bffBaseUrl =
+  typeof configuredBffBaseUrl === 'string' ? configuredBffBaseUrl : 'http://localhost:18082';
 const retryableRequests = new WeakMap<Request, Request>();
 let refreshPromise: Promise<void> | null = null;
 
@@ -103,5 +107,5 @@ export const requireData = <T>(result: ApiResult<T>): NonNullable<T> => {
     throw new BffApiError(result.response, { message: 'BFF returned an empty response.' });
   }
 
-  return result.data as NonNullable<T>;
+  return result.data;
 };

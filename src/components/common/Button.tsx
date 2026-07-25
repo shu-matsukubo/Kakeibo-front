@@ -36,7 +36,7 @@ export const Button: FC<Props> = ({
     .join(' ');
 
   return (
-    <button className={classes} disabled={disabled || loading} {...props}>
+    <button className={classes} disabled={loading || disabled} {...props}>
       {loading ? (
         <span className="btn__spinner" />
       ) : iconOnly ? (

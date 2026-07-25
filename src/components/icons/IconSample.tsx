@@ -1,5 +1,6 @@
-import SampleSvg from '@/assets/icons/sample.svg?react';
 import type { SVGProps } from 'react';
+
+import SampleSvg from '@/assets/icons/sample.svg?react';
 
 type Props = {
   size?: number;
