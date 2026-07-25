@@ -40,14 +40,14 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/auth/session': {
+  '/auth/login': {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    /** Check the browser session */
+    /** Start the authorization code login flow */
     get: {
       parameters: {
         query?: never;
@@ -57,42 +57,26 @@ export type paths = {
       };
       requestBody?: never;
       responses: {
-        /** @description The browser session is authenticated. */
-        200: {
+        /** @description Redirect to the authentication server. */
+        302: {
           headers: {
+            /** @description Redirect destination. */
+            Location?: string;
             [name: string]: unknown;
           };
-          content: {
-            'application/json': components['schemas']['AuthenticatedResponse'];
-          };
+          content?: never;
         };
-        /** @description The browser session is missing or expired. */
-        401: {
+        /** @description A retry page is shown when the authorization flow cannot be started. */
+        502: {
           headers: {
             [name: string]: unknown;
           };
           content: {
-            'application/json': components['schemas']['ErrorResponse'];
+            'text/html': string;
           };
         };
       };
     };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/auth/login': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
     put?: never;
     /** Log in and create a browser session */
     post: {
@@ -146,6 +130,108 @@ export type paths = {
         };
       };
     };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/auth/callback': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Complete the authorization code login flow */
+    get: {
+      parameters: {
+        query: {
+          code: string;
+          state: string;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Login succeeded and the browser returns to the frontend. */
+        302: {
+          headers: {
+            /** @description Redirect destination. */
+            Location?: string;
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description A retry page is shown for an invalid or expired authorization response. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'text/html': string;
+          };
+        };
+        /** @description A retry page is shown when the authentication service cannot complete the login. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'text/html': string;
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/auth/session': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Check the browser session */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description The browser session is authenticated. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['AuthenticatedResponse'];
+          };
+        };
+        /** @description The browser session is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;

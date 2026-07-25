@@ -52,7 +52,7 @@ function App() {
   }
 
   if (!authenticated) {
-    return <LoginPage onAuthenticated={() => setAuthenticated(true)} />;
+    return <LoginPage />;
   }
 
   return (

@@ -6,7 +6,7 @@ import type { Middleware } from 'openapi-fetch';
 import { notifyAuthExpired } from '@/auth/events';
 
 const configuredBffBaseUrl: unknown = import.meta.env.VITE_BFF_BASE_URL;
-const bffBaseUrl =
+export const bffBaseUrl =
   typeof configuredBffBaseUrl === 'string' ? configuredBffBaseUrl : 'http://localhost:18082';
 const retryableRequests = new WeakMap<Request, Request>();
 let refreshPromise: Promise<void> | null = null;

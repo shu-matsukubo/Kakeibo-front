@@ -2,7 +2,7 @@
 
 React + TypeScript + Vite frontend for the matsu workspace.
 
-The frontend talks to `matsu-bff` instead of calling the Laravel API or auth server directly. Browser authentication is handled through an HttpOnly session cookie owned by the BFF.
+The frontend talks to `matsu-bff` instead of calling the Laravel API or auth server directly. Login redirects through the auth server's authorization page, while the resulting tokens remain in the BFF and the browser receives only an HttpOnly session cookie.
 
 ## Tech Stack
 

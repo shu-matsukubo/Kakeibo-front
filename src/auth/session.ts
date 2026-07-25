@@ -1,5 +1,9 @@
-import { api, requireData } from '@/api/client';
+import { api, bffBaseUrl, requireData } from '@/api/client';
 export { notifyAuthExpired } from '@/auth/events';
+
+export const beginLogin = (): void => {
+  window.location.assign(`${bffBaseUrl}/auth/login`);
+};
 
 export const login = async (email: string, password: string): Promise<void> => {
   requireData(
