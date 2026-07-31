@@ -5,6 +5,10 @@ export const beginLogin = (): void => {
   window.location.assign(`${bffBaseUrl}/auth/login`);
 };
 
+export const beginToolboxLogin = (): void => {
+  window.location.assign(`${bffBaseUrl}/auth/toolbox/login`);
+};
+
 export const login = async (email: string, password: string): Promise<void> => {
   requireData(
     await api.POST('/auth/login', {
@@ -20,6 +24,24 @@ export const register = async (email: string, password: string): Promise<void> =
     })
   );
 };
+
+export const loginToArcade = async (email: string, password: string): Promise<void> => {
+  requireData(
+    await api.POST('/auth/arcade/login', {
+      body: { email, password },
+    })
+  );
+};
+
+export const registerWithArcade = async (email: string, password: string): Promise<void> => {
+  requireData(
+    await api.POST('/auth/arcade/register', {
+      body: { email, password },
+    })
+  );
+};
+
+export const disconnectArcade = async () => requireData(await api.POST('/auth/arcade/disconnect'));
 
 export const refreshSession = async (): Promise<void> => {
   requireData(await api.POST('/auth/refresh'));

@@ -8,50 +8,16 @@ import { notifyAuthExpired } from '@/auth/events';
 const configuredBffBaseUrl: unknown = import.meta.env.VITE_BFF_BASE_URL;
 export const bffBaseUrl =
   typeof configuredBffBaseUrl === 'string' ? configuredBffBaseUrl : 'http://localhost:18082';
-const retryableRequests = new WeakMap<Request, Request>();
-let refreshPromise: Promise<void> | null = null;
 
-const refreshSession = async (): Promise<void> => {
-  const response = await fetch(`${bffBaseUrl}/auth/refresh`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      accept: 'application/json',
-    },
-  });
+const matsuApiPath = (schemaPath: string): boolean =>
+  schemaPath.startsWith('/api/expenses') ||
+  schemaPath === '/api/payment-methods' ||
+  schemaPath === '/api/categories';
 
-  if (!response.ok) {
-    throw new Error('Session refresh failed.');
-  }
-};
-
-const sessionRetryMiddleware: Middleware = {
-  onRequest({ request, schemaPath }) {
-    if (schemaPath.startsWith('/api/')) {
-      retryableRequests.set(request, request.clone());
-    }
-  },
-  async onResponse({ request, response, schemaPath }) {
-    if (!schemaPath.startsWith('/api/') || response.status !== 401) {
-      return;
-    }
-
-    const retryRequest = retryableRequests.get(request);
-
-    if (!retryRequest) {
-      return;
-    }
-
-    try {
-      refreshPromise ??= refreshSession().finally(() => {
-        refreshPromise = null;
-      });
-
-      await refreshPromise;
-      return fetch(retryRequest);
-    } catch {
+const sessionMiddleware: Middleware = {
+  onResponse({ response, schemaPath }) {
+    if (response.status === 401 && matsuApiPath(schemaPath)) {
       notifyAuthExpired();
-      return response;
     }
   },
 };
@@ -61,7 +27,7 @@ export const api = createClient<paths>({
   credentials: 'include',
 });
 
-api.use(sessionRetryMiddleware);
+api.use(sessionMiddleware);
 
 type ApiResult<T> =
   | {

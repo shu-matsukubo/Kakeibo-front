@@ -47,7 +47,7 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** Start the authorization code login flow */
+    /** Start the matsu API authorization code login flow */
     get: {
       parameters: {
         query?: never;
@@ -78,7 +78,7 @@ export type paths = {
       };
     };
     put?: never;
-    /** Log in and create a browser session */
+    /** Log in to matsu API and create or merge a browser session */
     post: {
       parameters: {
         query?: never;
@@ -136,6 +136,51 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/auth/toolbox/login': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Connect Toolbox with Authorization Code and PKCE */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Redirect to the authentication server for Toolbox authorization. */
+        302: {
+          headers: {
+            /** @description Redirect destination. */
+            Location?: string;
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description A retry page is shown when the authorization flow cannot be started. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'text/html': string;
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/auth/callback': {
     parameters: {
       query?: never;
@@ -143,7 +188,7 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** Complete the authorization code login flow */
+    /** Complete an authorization code connection flow */
     get: {
       parameters: {
         query: {
@@ -156,7 +201,7 @@ export type paths = {
       };
       requestBody?: never;
       responses: {
-        /** @description Login succeeded and the browser returns to the frontend. */
+        /** @description The resource connection succeeded and the browser returns to the frontend. */
         302: {
           headers: {
             /** @description Redirect destination. */
@@ -174,7 +219,7 @@ export type paths = {
             'text/html': string;
           };
         };
-        /** @description A retry page is shown when the authentication service cannot complete the login. */
+        /** @description A retry page is shown when the authentication service cannot complete the connection. */
         502: {
           headers: {
             [name: string]: unknown;
@@ -200,7 +245,7 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** Check the browser session */
+    /** Check the browser session and resource connections */
     get: {
       parameters: {
         query?: never;
@@ -247,7 +292,7 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** Register and create a browser session */
+    /** Register with matsu API and create or merge a browser session */
     post: {
       parameters: {
         query?: never;
@@ -305,6 +350,140 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/auth/arcade/login': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Log in to Arcade without exposing Arcade tokens to the browser */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['AuthRequest'];
+        };
+      };
+      responses: {
+        /** @description Arcade login succeeded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['AuthenticatedResponse'];
+          };
+        };
+        /** @description Request validation failed. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ValidationErrorResponse'];
+          };
+        };
+        /** @description The Arcade credentials are invalid. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade authentication is unavailable or returned an invalid response. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/auth/arcade/register': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Register with Arcade without exposing Arcade tokens to the browser */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['AuthRequest'];
+        };
+      };
+      responses: {
+        /** @description Arcade registration succeeded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['AuthenticatedResponse'];
+          };
+        };
+        /** @description Request validation failed. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ValidationErrorResponse'];
+          };
+        };
+        /** @description The Arcade email address is already registered. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade authentication is unavailable or returned an invalid response. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/auth/refresh': {
     parameters: {
       query?: never;
@@ -314,7 +493,7 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** Refresh the server-side access token */
+    /** Refresh the matsu API server-side access token */
     post: {
       parameters: {
         query?: never;
@@ -324,7 +503,7 @@ export type paths = {
       };
       requestBody?: never;
       responses: {
-        /** @description The token was refreshed. */
+        /** @description The matsu API token was refreshed. */
         200: {
           headers: {
             [name: string]: unknown;
@@ -333,13 +512,49 @@ export type paths = {
             'application/json': components['schemas']['AuthenticatedResponse'];
           };
         };
-        /** @description The session could not be refreshed. */
+        /** @description The matsu API connection could not be refreshed. */
         401: {
           headers: {
             [name: string]: unknown;
           };
           content: {
             'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/auth/arcade/disconnect': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Disconnect Arcade while preserving other resource connections */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description The local Arcade connection was removed. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['SessionStateResponse'];
           };
         };
       };
@@ -359,7 +574,7 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** Delete the browser session */
+    /** Delete the complete browser session */
     post: {
       parameters: {
         query?: never;
@@ -758,6 +973,1891 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/toolbox/me': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get the connected Toolbox identity */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Verified Toolbox identity. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ToolboxMeResponse'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/toolbox/notes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Toolbox notes */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Owned Toolbox notes. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ToolboxNoteList'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Create a Toolbox note */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['ToolboxCreateNote'];
+        };
+      };
+      responses: {
+        /** @description Created note. */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ToolboxNote'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/toolbox/notes/{noteId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get a Toolbox note */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          noteId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Owned Toolbox note. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ToolboxNote'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    /** Delete a Toolbox note */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          noteId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Deleted Toolbox note. */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    /** Update a Toolbox note */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          noteId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['ToolboxUpdateNote'];
+        };
+      };
+      responses: {
+        /** @description Updated Toolbox note. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ToolboxNote'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
+  '/api/toolbox/bookmarks': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Toolbox bookmarks */
+    get: {
+      parameters: {
+        query?: {
+          tag?: string;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Owned Toolbox bookmarks. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ToolboxBookmarkList'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Create a Toolbox bookmark */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['ToolboxCreateBookmark'];
+        };
+      };
+      responses: {
+        /** @description Created bookmark. */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ToolboxBookmark'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/toolbox/bookmarks/{bookmarkId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get a Toolbox bookmark */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          bookmarkId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Owned Toolbox bookmark. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ToolboxBookmark'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    /** Delete a Toolbox bookmark */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          bookmarkId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Deleted Toolbox bookmark. */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    /** Update a Toolbox bookmark */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          bookmarkId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['ToolboxUpdateBookmark'];
+        };
+      };
+      responses: {
+        /** @description Updated Toolbox bookmark. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ToolboxBookmark'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
+  '/api/toolbox/tools/text/inspect': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Inspect text with Toolbox */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['ToolboxInspectText'];
+        };
+      };
+      responses: {
+        /** @description Text inspection metrics. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ToolboxTextInspection'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Toolbox connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Toolbox resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Toolbox request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Toolbox is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/arcade/me': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get the connected Arcade identity */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Verified Arcade identity. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ArcadeMeResponse'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Arcade connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Arcade resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/arcade/profile': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get the Arcade player profile */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Arcade player profile. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ArcadeProfile'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Arcade connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Arcade resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    /** Create or replace the Arcade player profile */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['ArcadePutProfileRequest'];
+        };
+      };
+      responses: {
+        /** @description Created or replaced Arcade player profile. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ArcadeProfile'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Arcade connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Arcade resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/arcade/games': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List enabled Arcade games */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Enabled Arcade games. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ArcadeGameList'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Arcade connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Arcade resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/arcade/games/{gameKey}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get an Arcade game */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          gameKey: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Enabled Arcade game. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ArcadeGame'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Arcade connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Arcade resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/arcade/scores': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List the connected player Arcade scores */
+    get: {
+      parameters: {
+        query?: {
+          gameKey?: string;
+          limit?: number;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Arcade scores. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ArcadeScoreList'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Arcade connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Arcade resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Record an Arcade score */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['ArcadeCreateScoreRequest'];
+        };
+      };
+      responses: {
+        /** @description Recorded Arcade score. */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ArcadeScore'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Arcade connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Arcade resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/arcade/scores/{scoreId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get an Arcade score */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          scoreId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Owned Arcade score. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ArcadeScore'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Arcade connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Arcade resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    /** Delete an Arcade score */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          scoreId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Deleted Arcade score. */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Arcade connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Arcade resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/arcade/leaderboards/{gameKey}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get an Arcade leaderboard */
+    get: {
+      parameters: {
+        query?: {
+          limit?: number;
+        };
+        header?: never;
+        path: {
+          gameKey: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Arcade leaderboard. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ArcadeLeaderboard'];
+          };
+        };
+        /** @description The request is invalid. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['BadRequestResponse'];
+          };
+        };
+        /** @description The Arcade connection is missing or expired. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The requested Arcade resource was not found. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request conflicts with existing state. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description The Arcade request was rejected. */
+        422: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Arcade is unavailable or violated the BFF response contract. */
+        502: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 };
 export type webhooks = Record<string, never>;
 export type components = {
@@ -769,6 +2869,12 @@ export type components = {
     AuthenticatedResponse: {
       /** @enum {boolean} */
       authenticated: true;
+      resources: components['schemas']['ResourceConnections'];
+    };
+    ResourceConnections: {
+      matsuApi: boolean;
+      toolbox: boolean;
+      arcade: boolean;
     };
     ErrorResponse: {
       message: string;
@@ -790,9 +2896,21 @@ export type components = {
       /** @example password */
       password: string;
     };
+    SessionStateResponse: {
+      authenticated: boolean;
+      resources: components['schemas']['ResourceConnections'];
+    };
     LoggedOutResponse: {
       /** @enum {boolean} */
       authenticated: false;
+      resources: {
+        /** @enum {boolean} */
+        matsuApi: false;
+        /** @enum {boolean} */
+        toolbox: false;
+        /** @enum {boolean} */
+        arcade: false;
+      };
     };
     ExpenseSummaryResponse: {
       data: components['schemas']['ExpenseSummary'][];
@@ -860,6 +2978,143 @@ export type components = {
     ExpenseCategory: {
       id: string;
       name: string;
+    };
+    ToolboxMeResponse: {
+      sub: string;
+      /** Format: email */
+      email?: string;
+      /** Format: uri */
+      issuer: string;
+      audience: string;
+    };
+    ToolboxNote: {
+      /** Format: uuid */
+      id: string;
+      ownerSub: string;
+      title: string;
+      content: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    ToolboxCreateNote: {
+      title: string;
+      /** @default  */
+      content: string;
+    };
+    ToolboxNoteList: components['schemas']['ToolboxNote'][];
+    ToolboxUpdateNote: {
+      title?: string;
+      content?: string;
+    };
+    ToolboxBookmark: {
+      /** Format: uuid */
+      id: string;
+      ownerSub: string;
+      /** Format: uri */
+      url: string;
+      title: string;
+      tags: string[];
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    ToolboxCreateBookmark: {
+      /** Format: uri */
+      url: string;
+      title: string;
+      /** @default [] */
+      tags: string[];
+    };
+    ToolboxBookmarkList: components['schemas']['ToolboxBookmark'][];
+    ToolboxUpdateBookmark: {
+      /** Format: uri */
+      url?: string;
+      title?: string;
+      tags?: string[];
+    };
+    ToolboxTextInspection: {
+      codePointCount: number;
+      utf8ByteCount: number;
+      wordCount: number;
+      lineCount: number;
+      sha256: string;
+    };
+    ToolboxInspectText: {
+      text: string;
+    };
+    ArcadeMeResponse: {
+      sub: string;
+      /** Format: email */
+      email?: string;
+      /** Format: uri */
+      issuer: string;
+      audience: string;
+    };
+    ArcadeProfile: {
+      ownerSub: string;
+      displayName: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    ArcadePutProfileRequest: {
+      displayName: string;
+    };
+    ArcadeGameList: {
+      items: components['schemas']['ArcadeGame'][];
+    };
+    ArcadeGame: {
+      key: string;
+      name: string;
+      description: string;
+      /** @enum {string} */
+      scoreOrder: 'higher-is-better';
+      enabled: boolean;
+    };
+    ArcadeScore: {
+      /** Format: uuid */
+      id: string;
+      gameKey: string;
+      score: number;
+      /** Format: date-time */
+      playedAt: string;
+      metadata: {
+        [key: string]: unknown;
+      };
+      /** Format: date-time */
+      createdAt: string;
+    };
+    ArcadeCreateScoreRequest: {
+      gameKey: string;
+      score: number;
+      /** Format: date-time */
+      playedAt?: string;
+      /** @default {} */
+      metadata: {
+        [key: string]: unknown;
+      };
+    };
+    ArcadeScoreList: {
+      items: components['schemas']['ArcadeScore'][];
+    };
+    ArcadeLeaderboard: {
+      gameKey: string;
+      /** @enum {string} */
+      scoreOrder: 'higher-is-better';
+      /** @enum {string} */
+      ranking: 'RANK by score; equal scores share a rank and earlier achievedAt is listed first.';
+      entries: components['schemas']['ArcadeLeaderboardEntry'][];
+    };
+    ArcadeLeaderboardEntry: {
+      rank: number;
+      displayName: string;
+      score: number;
+      /** Format: date-time */
+      achievedAt: string;
     };
   };
   responses: never;
