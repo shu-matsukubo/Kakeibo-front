@@ -76,12 +76,9 @@ API clientはBFFのsession Cookieを送信します。認証処理を変更す�
 | `npm run build`            | TypeScriptのbuild確認後、production bundleを生成する |
 | `npm run preview`          | 生成したproduction buildをローカルで確認する         |
 | `npm run lint`             | ESLintをwarningなしで実行する                        |
-| `npm run lint:fix`         | ESLintで修正可能な問題を修正する                     |
 | `npm run typecheck`        | ファイルを出力せずTypeScriptを検査する               |
-| `npm run format`           | Prettierでファイルを整形する                         |
 | `npm run format:check`     | Prettierの差分がないことを確認する                   |
 | `npm run check`            | lint、typecheck、format checkをまとめて実行する      |
-| `npm run fix`              | lintの自動修正とformatを実行する                     |
 | `npm run openapi:generate` | BFF OpenAPIからFrontendのAPI型を生成する             |
 | `npm run openapi:check`    | API型を再生成し、未反映の差分がないことを確認する    |
 
@@ -123,3 +120,4 @@ Pull Requestを作成する前にも、同じ品質ゲートをローカルで�
 - [Frontendの責務と境界](https://github.com/shu-matsukubo/matsu-docs/blob/main/docs/components/frontend.md)
 - [API契約の管理方針](https://github.com/shu-matsukubo/matsu-docs/blob/main/docs/architecture/api-contracts.md)
 - [認証とセッション](https://github.com/shu-matsukubo/matsu-docs/blob/main/docs/architecture/authentication.md)
+- [品質ゲート](https://github.com/shu-matsukubo/matsu-docs/blob/main/docs/architecture/quality-gates.md)
