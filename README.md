@@ -1,48 +1,97 @@
-# matsu Front
+# matsu-front
 
-React + TypeScript + Vite frontend for the matsu workspace.
+`matsu-front` は、matsu のブラウザ向けフロントエンドです。React、TypeScript、Vite で構成し、画面表示、ユーザー操作、画面内の一時的な状態、BFFから取得したデータの表示を担当します。
 
-The frontend talks to `matsu-bff` instead of calling the Laravel API or auth server directly. Login redirects through the auth server's authorization page, while the resulting tokens remain in the BFF and the browser receives only an HttpOnly session cookie.
+ブラウザからのAPI通信は `matsu-bff` だけを経由します。各resource serverやAuth Serverを直接呼び出しません。access tokenとrefresh tokenはBFFが管理し、ブラウザの `localStorage` や `sessionStorage` には保存しません。
 
-## Tech Stack
+## 必要な環境
 
-- React
-- TypeScript
-- Vite
-- TanStack Query
-- openapi-fetch
-- OpenAPI-generated TypeScript types
-- lucide-react
+- Node.js 22
+- npm
+- Docker Desktop（Dockerで起動する場合）
+- ローカルで起動した `matsu-bff`
 
-## Local Development
+ワークスペース全体の準備と起動方法は、親リポジトリの `README.md` と `DEVELOPMENT.md` を参照してください。
+
+## セットアップ
+
+リポジトリのルートで依存関係をインストールします。
 
 ```bash
 npm install
+```
+
+Windows PowerShellで実行ポリシーにより `npm.ps1` が拒否される場合は、`npm` の代わりに `npm.cmd` を使用してください。
+
+## 起動と停止
+
+### Node.jsで起動する
+
+```bash
 npm run dev
 ```
 
-The Vite dev server is usually available at:
+開発サーバーは通常、`http://localhost:5173` で起動します。停止するには、実行中のターミナルで `Ctrl+C` を押します。
 
-```text
-http://localhost:5173
+### Dockerで起動する
+
+```bash
+docker compose up --build front
 ```
 
-## Environment
+ソースコードはコンテナへbind mountされ、Viteのhot reloadが有効になります。停止後にコンテナを削除する場合は、次を実行します。
 
-The BFF base URL defaults to:
-
-```text
-http://localhost:18082
+```bash
+docker compose down
 ```
 
-Set `VITE_BFF_BASE_URL` if a different BFF origin is needed.
+このCompose構成はローカル開発専用です。
 
-API requests use the typed BFF contract. The frontend must not store access or refresh tokens in localStorage.
+## BFFの設定
 
-## BFF Contract Workflow
+BFFの既定URLは `http://localhost:18082` です。別のURLを使用する場合は、`.env.local` に次を設定します。
 
-The generated BFF OpenAPI artifact is the source of frontend API types. After changing a BFF
-route or schema, regenerate both artifacts:
+```dotenv
+VITE_BFF_BASE_URL=http://localhost:18082
+```
+
+`.env.local` はGit管理の対象外です。Docker起動時は `docker-compose.yml` の `VITE_BFF_BASE_URL` が使用されます。
+
+API clientはBFFのsession Cookieを送信します。認証処理を変更する場合も、ブラウザでtokenを保持したり、BFFを迂回する通信を追加したりしないでください。
+
+## 基本的な開発フロー
+
+1. `develop` の最新状態から作業branchを作成します。
+2. `npm install` で依存関係を同期します。
+3. `npm run dev` またはDockerで開発サーバーを起動します。
+4. 変更後に `npm run check` と `npm run build` を実行します。
+5. BFFのrouteやschemaに追従した場合は、OpenAPI型を再生成して差分を含めます。
+6. `develop` 向けのPull Requestを作成します。
+
+## 主なスクリプト
+
+| コマンド                   | 用途                                                 |
+| -------------------------- | ---------------------------------------------------- |
+| `npm run dev`              | Vite開発サーバーを起動する                           |
+| `npm run build`            | TypeScriptのbuild確認後、production bundleを生成する |
+| `npm run preview`          | 生成したproduction buildをローカルで確認する         |
+| `npm run lint`             | ESLintをwarningなしで実行する                        |
+| `npm run typecheck`        | ファイルを出力せずTypeScriptを検査する               |
+| `npm run format:check`     | Prettierの差分がないことを確認する                   |
+| `npm run check`            | lint、typecheck、format checkをまとめて実行する      |
+| `npm run openapi:generate` | BFF OpenAPIからFrontendのAPI型を生成する             |
+| `npm run openapi:check`    | API型を再生成し、未反映の差分がないことを確認する    |
+
+Docker内で品質チェックを実行する場合は、次を使用します。
+
+```bash
+docker compose run --rm front npm run check
+docker compose run --rm front npm run build
+```
+
+## BFF OpenAPI型の更新
+
+BFFの登録済みrouteとschemaから生成される `matsu-bff/openapi/openapi.json` が、Frontend API型の入力です。BFF契約を変更した場合は、ワークスペースの `apps` 配下で両リポジトリが隣接している状態で次を実行します。
 
 ```bash
 cd ../matsu-bff
@@ -52,82 +101,23 @@ cd ../matsu-front
 npm run openapi:generate
 ```
 
-`openapi-fetch` uses the generated `paths` type, so URLs, query parameters, request bodies,
-success responses, and error responses are checked without handwritten API response types.
+生成先は `src/api/generated/schema.d.ts` です。生成ファイルは手作業で編集しません。`npm run openapi:check` は、再生成後に未反映の差分が生じないことを検査する場合に使用します。`matsu-front` を単独でcloneした場合も既存の生成ファイルでbuildできますが、再生成には `matsu-bff` を同じ親ディレクトリへ配置する必要があります。
 
-## Scripts
+## CIと最小運用
 
-| Script                     | Description                                                       |
-| -------------------------- | ----------------------------------------------------------------- |
-| `npm run dev`              | Start the Vite dev server.                                        |
-| `npm run build`            | Run TypeScript build checks and create the production Vite build. |
-| `npm run lint`             | Run ESLint with zero warnings allowed.                            |
-| `npm run lint:fix`         | Auto-fix ESLint issues where possible.                            |
-| `npm run format`           | Format source files with Prettier.                                |
-| `npm run format:check`     | Check Prettier formatting.                                        |
-| `npm run typecheck`        | Run TypeScript without emitting files.                            |
-| `npm run check`            | Run ESLint, TypeScript, and Prettier checks.                      |
-| `npm run fix`              | Auto-fix ESLint issues and format the project.                    |
-| `npm run openapi:generate` | Generate frontend types from the BFF OpenAPI artifact.            |
-| `npm run openapi:check`    | Verify that generated frontend API types are current.             |
-| `npm run preview`          | Preview the production build locally.                             |
-
-On Windows PowerShell, use `npm.cmd run ...` if `npm.ps1` is blocked by execution policy.
-
-## Docker
-
-Start the Vite development server in Docker with hot reload:
+`develop` または `main` 向けのPull Requestでは、GitHub ActionsがNode.js 22で次を実行します。
 
 ```bash
-docker compose up
+npm ci
+npm run check
+npm run build
 ```
 
-The app is available at:
+Pull Requestを作成する前にも、同じ品質ゲートをローカルで実行してください。依存関係を更新した場合は `package.json` と `package-lock.json` を同じ変更に含めます。
 
-```text
-http://localhost:5173
-```
+## 関連する設計資料
 
-The Docker environment is intended for local development only. It uses
-`VITE_BFF_BASE_URL=http://localhost:18082` so the browser calls the local BFF.
-
-Run all quality checks in a one-off container:
-
-```bash
-docker compose run --rm front npm run check
-```
-
-Auto-fix ESLint issues and format the project through Docker:
-
-```bash
-docker compose run --rm front npm run fix
-```
-
-## CI
-
-GitHub Actions runs on pull requests targeting `develop` or `main`. The workflow installs
-dependencies with `npm ci`, runs ESLint, TypeScript, and Prettier checks, and verifies the
-production build.
-
-```text
-.github/workflows/ci.yml
-```
-
-## Main Directories
-
-- `src/api`: OpenAPI-typed client and API request modules.
-- `src/api/generated/schema.d.ts`: Generated BFF request and response types.
-- `src/auth`: Session helpers for BFF-backed authentication.
-- `src/components`: Reusable UI components.
-- `src/hooks`: React hooks.
-- `src/pages`: Page-level components.
-- `src/styles`: CSS, tokens, and utilities.
-- `src/types`: Shared TypeScript types.
-- `src/utils`: Utility functions.
-
-## Related Services
-
-- BFF: `http://localhost:18082`
-- API through BFF: `http://localhost:18082/api`
-- Laravel API directly: `http://localhost:18080/api`
-- Auth server directly: `http://localhost:18081`
+- [Frontendの責務と境界](https://github.com/shu-matsukubo/matsu-docs/blob/main/docs/components/frontend.md)
+- [API契約の管理方針](https://github.com/shu-matsukubo/matsu-docs/blob/main/docs/architecture/api-contracts.md)
+- [認証とセッション](https://github.com/shu-matsukubo/matsu-docs/blob/main/docs/architecture/authentication.md)
+- [品質ゲート](https://github.com/shu-matsukubo/matsu-docs/blob/main/docs/architecture/quality-gates.md)
